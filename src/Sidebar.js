@@ -1,8 +1,15 @@
-import React from 'react'
+import React from "react";
+
+export default function Sidebar({
+  notes,
+  onAddNote,
+  onDeleteNote,
+  activeNote,
+  setActiveNote,
+}) {
+  const sortedNotes = notes.sort((a,b)=> b.lastModified - a.lastModified)
 
 
-export default function Sidebar({notes, onAddNote}) {
- 
   return (
     <div className="app-sidebar">
       <div className="app-sidebar-header">
@@ -10,32 +17,40 @@ export default function Sidebar({notes, onAddNote}) {
         <button onClick={onAddNote}>Add</button>
       </div>
       <div className="app-sidebar-notes">
-        
-        {notes.map(note => {
+        {sortedNotes.map((note) => {
+          return (
+            <div
+              className={`app-sidebar-note ${
+                note.id === activeNote && "active"
+              }`}
+              onClick={() => {
+                setActiveNote(note.id)
+                // console.log(activeNote)
+              }}
+            >
+              <div className="sidebar-note-title">
+                <strong>{note.title}</strong>
 
-        <div className="app-sidebar-note">
-          <div className="sidebar-note-title">
-          
-          <strong>TITLE</strong>
-          <button>Delete</button>
+                <button onClick={() => onDeleteNote(note.id)}>Delete</button>
+              </div>
 
-          </div>
-          
-
-          <p>This the your note</p>
-          <small> Last Modified [date]</small>
-
-          
-        </div>
-
+              <p>{note.body.length>50 ? note.body.substr(0, 100) + "...": note.body}</p>
+              <small>
+                Last Modified{" "}
+                {new Date(note.lastModified).toLocaleDateString("hi-IN", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hc: "h24",
+                })}
+              </small>
+            </div>
+          );
         })}
-
       </div>
     </div>
-
-  )
+  );
 }
-      
-
-
-
